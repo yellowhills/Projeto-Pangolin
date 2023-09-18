@@ -25,16 +25,36 @@ public class NewBehaviourScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+
+
         PlayerDirection = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
 
         if(PlayerDirection.sqrMagnitude > 0)
         {
             PlayerAnimator.SetInteger("Movimento", 1);
 
+            if(PlayerDirection.y > 0)
+            {
+                PlayerAnimator.SetInteger("VerticalMovement", 1);
+
+
+            }
+            else if(PlayerDirection.y < 0)
+            {
+                PlayerAnimator.SetInteger("VerticalMovement", -1);
+            }
+            else
+            {
+                PlayerAnimator.SetInteger("VerticalMovement", 0);
+            }
+
+
         }
         else
         {
             PlayerAnimator.SetInteger("Movimento", 0);
+            PlayerAnimator.SetInteger("VerticalMovement", 0);
         }
 
         Flip();
@@ -62,6 +82,7 @@ public class NewBehaviourScript : MonoBehaviour
         }
 
     }
+
 
     void PlayerRun()
     {
