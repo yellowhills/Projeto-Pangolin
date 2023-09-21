@@ -12,13 +12,15 @@ public class PlayerController : MonoBehaviour
     public float PlayerRunSpeed;
     private Animator PlayerAnimator;
 
+    private bool IsAttacking = false;
+
     // Start is called before the first frame update
     void Start()
     {
         PlayerRigidbody2D = GetComponent<Rigidbody2D>();
         PlayerAnimator = GetComponent<Animator>();
 
-        PlayerInitialSpeed = PlayerSpeed;
+        PlayerInitialSpeed = 5;
         
     }
 
@@ -60,6 +62,19 @@ public class PlayerController : MonoBehaviour
         Flip();
 
         PlayerRun();
+
+        OnAttack();
+
+        if(IsAttacking)
+        {
+            PlayerAnimator.SetInteger("VerticalMovement", 0);
+            PlayerAnimator.SetInteger("Movimento", 0);
+            PlayerAnimator.SetInteger("Ataque", 1);
+        }
+        else
+        {
+            PlayerAnimator.SetInteger("Ataque", 0);
+        }
     }
 
     void FixedUpdate()
@@ -98,5 +113,21 @@ public class PlayerController : MonoBehaviour
 
         }
 
+    }
+
+    void OnAttack()
+    {
+        if(Input.GetKeyDown(KeyCode.LeftControl) || Input.GetMouseButtonDown(0))
+        {
+            IsAttacking = true;
+            PlayerSpeed = 0;
+
+        }
+
+        if(Input.GetKeyUp(KeyCode.LeftControl) || Input.GetMouseButtonUp(0))
+        {
+            IsAttacking = false;
+            PlayerSpeed = PlayerInitialSpeed;
+        }
     }
 }
