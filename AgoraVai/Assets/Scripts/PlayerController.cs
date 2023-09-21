@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEditor.Tilemaps;
 using UnityEngine;
 
-public class NewBehaviourScript : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
     private Rigidbody2D PlayerRigidbody2D;
     public float PlayerSpeed;
@@ -64,7 +64,7 @@ public class NewBehaviourScript : MonoBehaviour
 
     void FixedUpdate()
     {
-        PlayerRigidbody2D.MovePosition(PlayerRigidbody2D.position + PlayerDirection * PlayerSpeed * 
+        PlayerRigidbody2D.MovePosition(PlayerRigidbody2D.position + PlayerDirection.normalized * PlayerSpeed * 
             Time.fixedDeltaTime); 
     }
 
