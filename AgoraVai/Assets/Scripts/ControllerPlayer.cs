@@ -9,7 +9,9 @@ public class ControllerPlayer : MonoBehaviour
     public float moveSpeed = 1.0f;
     public float collisionOffset = 0.05f;
     public ContactFilter2D movementFilter;
-    
+    public SwordAttack SwordAttack;
+
+    bool canMove = true;
 
     Vector2 movementInput;
     Rigidbody2D rb;
@@ -30,35 +32,40 @@ public class ControllerPlayer : MonoBehaviour
     // Update is called once per frame
     private void FixedUpdate()
     {
-        if (movementInput != Vector2.zero)
+        if (canMove)
         {
-            bool success = TryMove(movementInput);
-
-            if (!success)
+            if (movementInput != Vector2.zero)
             {
-                success = TryMove(new Vector2(movementInput.x, 0));
+                bool success = TryMove(movementInput);
 
                 if (!success)
                 {
-                    success = TryMove(new Vector2(0, movementInput.y));
+                    success = TryMove(new Vector2(movementInput.x, 0));
+
+                    if (!success)
+                    {
+                        success = TryMove(new Vector2(0, movementInput.y));
+                    }
                 }
+
+                animator.SetBool("isMoving", success);
+
+            }
+            else
+            {
+                animator.SetBool("isMoving", false);
             }
 
-            animator.SetBool("isMoving", success);
-
-        }
-        else
-        {
-            animator.SetBool("isMoving", false);
-        }
-
-        if (movementInput.x < 0)
-        {
-            spriteRenderer.flipX = true;
-        }
-        else if (movementInput.x > 0)
-        {
-            spriteRenderer.flipX = false;
+            if (movementInput.x < 0)
+            {
+                spriteRenderer.flipX = true;
+                
+            }
+            else if (movementInput.x > 0)
+            {
+                spriteRenderer.flipX = false;
+                
+            }
         }
         
     }
@@ -100,5 +107,34 @@ public class ControllerPlayer : MonoBehaviour
     {
         animator.SetTrigger("swordAttack");
 
+    }
+
+    public void swordAttack()
+    {
+        LockMovement();
+        if (spriteRenderer.flipX == true)
+        {
+            SwordAttack.AttackL();
+        }
+        else
+        {
+            SwordAttack.AttackR();
+        }
+    }
+
+    public void EndSwordAttack()
+    {
+        UnlockMovement();
+        SwordAttack.StopAttack();
+    }
+
+    public void LockMovement()
+    {
+        canMove = false;
+    }
+
+    public void UnlockMovement()
+    {
+        canMove = true;
     }
 }
